@@ -10,27 +10,28 @@ interface IUserInfo {
   password: string
 }
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
-
 const Login: React.FC = () => {
-  // const [messageApi, contextHolder] = message.useMessage()
   const navigate = useNavigate()
   const onFinish = async (userData: any) => {
-    // messageApi.info('Hello, Ant Design!')
-
-    const { data } = await Reguser(userData.username)
+    const { data } = await Reguser(userData.userName)
     data.forEach((element: IUserInfo) => {
       if (
-        element.username === userData.username &&
-        element.password === userData.password
+        element.username === userData.userName &&
+        element.password === userData.passWord
       ) {
         message.info('登陆成功!')
+        delete userData.passWord
+        // console.log(userData)
+        localStorage.setItem('userInfo', JSON.stringify(userData))
         navigate('/Home', { replace: true })
       }
     })
-    console.log(data)
+    if (data.length == 0) {
+      message.info('请核对账号密码!')
+    }
+  }
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo)
   }
   return (
     <Form
@@ -43,15 +44,15 @@ const Login: React.FC = () => {
       onFinishFailed={onFinishFailed}
       autoComplete="off">
       <Form.Item
-        label="Username"
-        name="username"
+        label="用户名"
+        name="userName"
         rules={[{ required: true, message: '请输入用户名!' }]}>
         <Input />
       </Form.Item>
 
       <Form.Item
-        label="Password"
-        name="password"
+        label="密码"
+        name="passWord"
         rules={[{ required: true, message: '请输入密码!' }]}>
         <Input.Password />
       </Form.Item>

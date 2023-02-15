@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 function Test() {
   // 声明一个叫 "count" 的 state 变量
   const [count, setCount] = useState(0)
-  console.log(useState(0))
+  // setCount(count + 1)
   let count1 = 1
   return (
     <div>

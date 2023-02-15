@@ -1,0 +1,5 @@
+.ant-menu-item-only-child:nth-child(3) {
+  position: absolute;
+  right: 8px;
+  top: 8px !important;
+}
