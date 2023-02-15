@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
+    "baseUrl": "./src", // 配置基础路径
     "lib": [
       "dom",
       "dom.iterable",
