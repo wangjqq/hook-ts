@@ -5,7 +5,6 @@
 .ant-menu-item-only-child:nth-child(3) {
   position: absolute;
   right: 20px;
-  top: 2px !important;
 }
 
 .ant-layout-header {

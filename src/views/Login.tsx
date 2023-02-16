@@ -24,6 +24,8 @@ const Login: React.FC = () => {
         // console.log(userData)
         localStorage.setItem('userInfo', JSON.stringify(userData))
         navigate('/Home', { replace: true })
+      } else {
+        message.info('请核对账号密码!')
       }
     })
     if (data.length === 0) {
