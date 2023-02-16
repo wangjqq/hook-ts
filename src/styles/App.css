@@ -1,5 +1,15 @@
 .ant-menu-item-only-child:nth-child(3) {
   position: absolute;
-  right: 8px;
+  right: 20px;
   top: 8px !important;
+}
+
+.ant-layout-header {
+  height: 50px !important;
+  line-height: 50px !important;
+}
+
+.handle {
+  margin-bottom: 20px;
+  margin-left: 20px;
 }

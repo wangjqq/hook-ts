@@ -1,5 +1,5 @@
 import React from 'react'
-import { Reguser } from 'interface/User'
+import { Login1 } from 'interface/User'
 
 import { Button, Form, Input, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
@@ -13,7 +13,7 @@ interface IUserInfo {
 const Login: React.FC = () => {
   const navigate = useNavigate()
   const onFinish = async (userData: any) => {
-    const { data } = await Reguser(userData.userName)
+    const { data } = await Login1(userData.userName)
     data.forEach((element: IUserInfo) => {
       if (
         element.username === userData.userName &&
@@ -26,7 +26,7 @@ const Login: React.FC = () => {
         navigate('/Home', { replace: true })
       }
     })
-    if (data.length == 0) {
+    if (data.length === 0) {
       message.info('请核对账号密码!')
     }
   }

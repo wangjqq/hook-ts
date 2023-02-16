@@ -1,5 +1,5 @@
 import axios from 'axios'
 
-export const Reguser = (data: string) => {
+export const Login1 = (data: string) => {
   return axios.get('/userinfo/?q=' + data)
 }
