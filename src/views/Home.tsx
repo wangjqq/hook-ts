@@ -1,21 +1,46 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Button, Space, Popconfirm, message } from 'antd'
-import { getList, addList, delList } from 'interface/Home'
-import AddInfoForm from 'components/AddInfoForm'
+import { Table, Button, Space, Popconfirm, message, Input } from 'antd'
+import { getList, addList, delList, editList, searchList } from 'interface/Home'
+import InfoForm from 'components/InfoForm'
+
+import 'styles/Home.css'
 
 const { Column } = Table //解构出列
+const { Search } = Input //解构出搜索框
 
 const Home: React.FC = () => {
-  const [open, setOpen] = useState(false) //添加的弹窗是否显示
+  const [open, setOpen] = useState(false) //弹窗是否显示
+  const [type, setType] = useState(false) //判断是编辑还是新增 false为新增 true为编辑
+  const [info, setinfo] = useState({
+    key: 1,
+    id: 1,
+    name: '王景奇',
+    des: '前端实习生',
+    age: '21',
+    number: '109222',
+  }) //保存编辑对象信息
 
   const onCreate = (values: any) => {
-    //确认添加处理函数
-    values.key = Date.now()
-    addList(values).then((res) => {
-      getList().then((res) => {
-        setlist(res.data)
+    if (type === false) {
+      //确认添加处理函数
+      values.key = Date.now()
+      addList(values).then((res) => {
+        getList().then((res) => {
+          setlist(res.data)
+        })
       })
-    })
+      setType(false)
+    } else {
+      // 确认修改处理函数
+      values.key = info.key
+      editList(values, info.id).then((res) => {
+        getList().then((res) => {
+          setlist(res.data)
+        })
+      })
+      setType(false)
+    }
+
     setOpen(false)
   }
 
@@ -37,16 +62,34 @@ const Home: React.FC = () => {
     message.info('删除成功!')
   }
 
+  const onSearch = (e: string) => {
+    //搜索的处理函数
+    console.log(e)
+    searchList(e).then((res) => {
+      setlist(res.data)
+    })
+    message.info('搜索成功!')
+  }
+
   return (
     <div className="Home">
       <div className="handle">
-        <Button
-          type="primary"
-          onClick={() => {
-            setOpen(true)
-          }}>
-          新建
-        </Button>
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => {
+              setOpen(true)
+              setType(false)
+            }}>
+            新增
+          </Button>
+          <Search
+            style={{ width: 304 }}
+            placeholder="搜索"
+            onSearch={onSearch}
+            enterButton
+          />
+        </Space>
       </div>
 
       <Table dataSource={listData}>
@@ -60,7 +103,15 @@ const Home: React.FC = () => {
           key="action"
           render={(_: any, record: any) => (
             <Space size="middle">
-              <a>编辑</a>
+              <p
+                className="btn"
+                onClick={() => {
+                  setOpen(true)
+                  setType(true)
+                  setinfo(record)
+                }}>
+                编辑
+              </p>
               <Popconfirm
                 placement="topLeft"
                 title={'确认删除'}
@@ -69,18 +120,21 @@ const Home: React.FC = () => {
                 onConfirm={delConfirm.bind(this, record)}
                 okText="Yes"
                 cancelText="No">
-                <a>删除{record.id}</a>
+                <p className="btn">删除</p>
               </Popconfirm>
             </Space>
           )}
         />
       </Table>
 
-      <AddInfoForm
+      <InfoForm
+        type={type} //判断是编辑还是新增
         open={open}
+        info={info}
         onCreate={onCreate}
         onCancel={() => {
           setOpen(false)
+          setType(false)
         }}
       />
     </div>

@@ -6,32 +6,62 @@ interface Values {
   description: string
   modifier: string
 }
-
+interface Info {
+  key: number
+  id: number
+  name: string
+  des: string
+  age: string
+  number: string
+}
 interface CollectionCreateFormProps {
+  info: Info
+  type: boolean
   open: boolean
   onCreate: (values: Values) => void
   onCancel: () => void
 }
 
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 8 },
-}
-
-const AddInfoForm: React.FC<CollectionCreateFormProps> = ({
+const InfoForm: React.FC<CollectionCreateFormProps> = ({
+  type,
+  info,
   open,
   onCreate,
   onCancel,
 }) => {
   const [form] = Form.useForm()
+  setTimeout(() => {
+    if (type && form) {
+      // form.setFieldsValue(info)
+      form.setFieldsValue({
+        name: info.name,
+        des: info.des,
+        age: info.age,
+        number: info.number,
+      })
+    }
+  }, 100)
+
+  const cancel = () => {
+    form.setFieldsValue({
+      name: '',
+      des: '',
+      age: '',
+      number: '',
+    })
+    console.log(2)
+    // Modal.destroyAll()
+    onCancel()
+  }
 
   return (
     <Modal
+      forceRender
       open={open}
-      title="新建人员信息"
-      okText="创建"
+      title={(type ? '修改' : '新建') + '人员信息'}
+      okText={type ? '修改' : '创建'}
       cancelText="取消"
-      onCancel={onCancel}
+      onCancel={cancel}
       onOk={() => {
         form
           .validateFields()
@@ -49,12 +79,14 @@ const AddInfoForm: React.FC<CollectionCreateFormProps> = ({
         layout="vertical"
         name="form_in_modal"
         // style={{ maxWidth: 30 }}
-        initialValues={{ modifier: 'public' }}>
+        // initialValues={type ? info : { modifier: 'public' }}
+      >
         <Row gutter={16}>
           <Col span={12}>
             <Form.Item
               name="name"
               label="姓名"
+              // initialValue={type ? info.name : info.name}
               rules={[
                 {
                   required: true,
@@ -111,4 +143,4 @@ const AddInfoForm: React.FC<CollectionCreateFormProps> = ({
   )
 }
 
-export default AddInfoForm
+export default InfoForm

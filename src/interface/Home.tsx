@@ -11,3 +11,11 @@ export const addList = (params: any) => {
 export const delList = (id: any) => {
   return axios.delete('/information/' + id)
 }
+
+export const editList = (params: any, id: number) => {
+  return axios.put('/information/' + id, params)
+}
+
+export const searchList = (key: string) => {
+  return axios.get('/information?q=' + key)
+}
