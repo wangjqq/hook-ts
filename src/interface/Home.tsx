@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-export const getList = () => {
-  return axios.get('/information')
+export const getList = (page: number, size: number) => {
+  return axios.get('/information?_page=' + page + '&_limit=' + size)
 }
 
 export const addList = (params: any) => {

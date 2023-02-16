@@ -2,3 +2,9 @@
   color: #1677ff;
   cursor: pointer;
 }
+/* .ant-table-wrapper {
+  height: 70vh !important;
+} */
+.ant-pagination {
+  margin-left: 30%;
+}

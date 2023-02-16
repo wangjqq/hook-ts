@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Button, Space, Popconfirm, message, Input } from 'antd'
+import {
+  Table,
+  Button,
+  Space,
+  Popconfirm,
+  message,
+  Input,
+  Pagination,
+} from 'antd'
 import { getList, addList, delList, editList, searchList } from 'interface/Home'
 import InfoForm from 'components/InfoForm'
 
@@ -9,6 +17,9 @@ const { Column } = Table //解构出列
 const { Search } = Input //解构出搜索框
 
 const Home: React.FC = () => {
+  const [page, setPage] = useState(1)
+  const [size, setSize] = useState(10)
+  const [total, setTotal] = useState(1)
   const [open, setOpen] = useState(false) //弹窗是否显示
   const [type, setType] = useState(false) //判断是编辑还是新增 false为新增 true为编辑
   const [info, setinfo] = useState({
@@ -25,19 +36,21 @@ const Home: React.FC = () => {
       //确认添加处理函数
       values.key = Date.now()
       addList(values).then((res) => {
-        getList().then((res) => {
+        getList(page, size).then((res) => {
           setlist(res.data)
         })
       })
+      message.info('创建成功!')
       setType(false)
     } else {
       // 确认修改处理函数
       values.key = info.key
       editList(values, info.id).then((res) => {
-        getList().then((res) => {
+        getList(page, size).then((res) => {
           setlist(res.data)
         })
       })
+      message.info('修改成功!')
       setType(false)
     }
 
@@ -47,15 +60,18 @@ const Home: React.FC = () => {
   const [listData, setlist] = useState([]) //列表的状态
 
   useEffect(() => {
-    getList().then((res) => {
+    getList(1, 1000000).then((res) => {
+      setTotal(res.data.length)
+    })
+    getList(page, size).then((res) => {
       setlist(res.data)
     })
-  }, [])
+  }, [page, size])
 
   const delConfirm = (record: any) => {
     //删除的处理函数
     delList(record.id).then((res) => {
-      getList().then((res) => {
+      getList(page, size).then((res) => {
         setlist(res.data)
       })
     })
@@ -64,13 +80,19 @@ const Home: React.FC = () => {
 
   const onSearch = (e: string) => {
     //搜索的处理函数
-    console.log(e)
     searchList(e).then((res) => {
       setlist(res.data)
     })
     message.info('搜索成功!')
   }
 
+  const onShowSizeChange = (page: number, size: number) => {
+    setPage(page)
+    setSize(size)
+    getList(page, size).then((res) => {
+      setlist(res.data)
+    })
+  }
   return (
     <div className="Home">
       <div className="handle">
@@ -92,7 +114,7 @@ const Home: React.FC = () => {
         </Space>
       </div>
 
-      <Table dataSource={listData}>
+      <Table dataSource={listData} pagination={false} className="tabletable">
         <Column title="id" dataIndex="id" />
         <Column title="姓名" dataIndex="name" />
         <Column title="描述" dataIndex="des" />
@@ -126,6 +148,15 @@ const Home: React.FC = () => {
           )}
         />
       </Table>
+      <Pagination
+        showSizeChanger
+        onChange={onShowSizeChange}
+        defaultCurrent={1}
+        defaultPageSize={10}
+        pageSize={size}
+        total={total}
+        current={page}
+      />
 
       <InfoForm
         type={type} //判断是编辑还是新增
