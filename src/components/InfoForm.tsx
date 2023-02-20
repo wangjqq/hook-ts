@@ -1,12 +1,12 @@
 import React from 'react'
 import { Col, Row, Form, Input, Modal } from 'antd'
 
-interface Values {
+interface IValues {
   title: string
   description: string
   modifier: string
 }
-interface Info {
+interface IInfo {
   key: number
   id: number
   name: string
@@ -15,10 +15,10 @@ interface Info {
   number: string
 }
 interface CollectionCreateFormProps {
-  info: Info
+  info: IInfo
   type: boolean
   open: boolean
-  onCreate: (values: Values) => void
+  onCreate: (values: IValues) => void
   onCancel: () => void
 }
 
